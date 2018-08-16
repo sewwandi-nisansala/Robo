@@ -1,4 +1,4 @@
-/*
+                                                                                                                                                                                                                                                                             /*
  * ultrasonic sensor pins:
  *    VCC: +5VDC
  *    Trig - pin 11
@@ -7,7 +7,8 @@
  */
  #define trigPin 11
  #define echoPin 12
- long duration, distance;
+ long duration;
+ int distance = 0;
  
  void setup() {
   //serial port begin
@@ -21,9 +22,12 @@
 void loop() {
  
   Serial.println(sonarReading(trigPin,echoPin));
-
+for(int i=0;i<5;i++){
+  distance += sonarReading(trigPin,echoPin);
   delay(50);
+}
 
+distance = distance / 5;
 }
 
 int sonarReading(int trig,int echo){
