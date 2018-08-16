@@ -1,54 +1,56 @@
-                                                                                                                                                                                                                                                                             /*
- * ultrasonic sensor pins:
- *    VCC: +5VDC
- *    Trig - pin 11
- *    Echo - pin 12
- *    GND - GND
- */
- #define trigPin 11
- #define echoPin 12
- long duration;
- int distance = 0;
- 
- void setup() {
+/*
+  ultrasonic sensor pins:
+     VCC: +5VDC
+     Trig - pin 11
+     Echo - pin 12
+     GND - GND
+*/
+#define trigPin 11
+#define echoPin 12
+long duration, distance;
+
+void setup() {
   //serial port begin
   Serial.begin (9600);
   //Define inputs and outputs
   pinMode(trigPin, OUTPUT);
-  pinMode(echoPin,INPUT);
+  pinMode(echoPin, INPUT);
 
 }
 
 void loop() {
- 
-  Serial.println(sonarReading(trigPin,echoPin));
-for(int i=0;i<5;i++){
-  distance += sonarReading(trigPin,echoPin);
-  delay(50);
+  Serial.println(getAvgSonarReading(trigPin, echoPin));
 }
 
-distance = distance / 5;
-}
-
-int sonarReading(int trig,int echo){
-   //The sensor is triggered by a HIGH pulse of 10 or more microseconds
+int sonarReading(int trig, int echo) {
+  //The sensor is triggered by a HIGH pulse of 10 or more microseconds
   //Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
 
-  digitalWrite(trigPin,LOW);
+  digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
-  digitalWrite(trigPin,HIGH);
+  digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigPin,LOW);
+  digitalWrite(trigPin, LOW);
 
   //read the signal from sensor : a HIGH pulse whose
-  //duration is the time (in microseconds) from the sending 
+  //duration is the time (in microseconds) from the sending
   //of the ping to the reception of its echo off an object
 
-  pinMode(echoPin,INPUT);
-  duration = pulseIn(echoPin,HIGH);
+  pinMode(echoPin, INPUT);
+  duration = pulseIn(echoPin, HIGH);
 
   //convert the time into a distance
-  distance = (duration/2*10)/29.1;
+  distance = (duration / 2 * 10) / 29.1;
+  return distance;
+}
+
+int getAvgSonarReading(int trig, int echo) {
+  distance = 0;
+  for (int i = 0; i < 5; i++) {
+    distance += sonarReading(trigPin, echoPin);
+    delay(50);
+  }
+  distance = distance / 5;
   return distance;
 }
 
